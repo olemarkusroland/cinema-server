@@ -13,45 +13,44 @@ import java.util.List;
 @RequestMapping(path="/movie")
 public class MovieEndpoint {
     @Autowired
-    private MovieRepository movieRepository;
+    private MovieRepository repository  ;
 
     @GetMapping
-    public ResponseEntity<List<Movie>> get() {
-        return ResponseEntity.ok(movieRepository.findAll());
+    public ResponseEntity<List<Movie>> getMovies() {
+        return ResponseEntity.ok(repository.findAll());
 
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovieById(@PathVariable long id) {
-        return movieRepository.findById(id)
+        return repository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Movie> post(@Valid @RequestBody Movie movie) {
-        return ResponseEntity.ok(movieRepository.save(movie));
+    public ResponseEntity<Movie> createMovie(@Valid @RequestBody Movie movie) {
+        return ResponseEntity.ok(repository.save(movie));
     }
 
 
     @PutMapping("/{id}")
     public ResponseEntity<Movie> updateMovie(@PathVariable long id, @Valid @RequestBody Movie movieDetails) {
-        return movieRepository.findById(id)
+        return repository.findById(id)
                 .map(movie -> {
                     movie.update(movieDetails); // Use the update method
-                    return ResponseEntity.ok(movieRepository.save(movie));
+                    return ResponseEntity.ok(repository.save(movie));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMovie(@PathVariable long id) {
-        return movieRepository.findById(id)
+        return repository.findById(id)
                 .map(movie -> {
-                    movieRepository.delete(movie);
+                    repository.delete(movie);
                     return ResponseEntity.ok().build();
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
 }
