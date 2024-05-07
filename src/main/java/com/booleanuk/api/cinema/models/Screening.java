@@ -38,6 +38,5 @@ public class Screening {
         this.screenNumber = screening.screenNumber;
         this.startsAt = screening.startsAt;
         this.capacity = screening.capacity;
-        this.updatedAt = OffsetDateTime.now();
     }
 }

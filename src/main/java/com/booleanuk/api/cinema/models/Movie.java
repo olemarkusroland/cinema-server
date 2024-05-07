@@ -2,7 +2,7 @@ package com.booleanuk.api.cinema.models;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 public class Movie {
@@ -13,20 +13,20 @@ public class Movie {
     public String rating;
     public String description;
     public int runtimeMins;
-    protected LocalDateTime createdAt;
-    protected LocalDateTime updatedAt;
+    protected OffsetDateTime createdAt;
+    protected OffsetDateTime updatedAt;
 
     protected Movie() {}
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+        this.createdAt = OffsetDateTime.now();
+        this.updatedAt = OffsetDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = OffsetDateTime.now();
     }
 
     public void update(Movie movie) {
@@ -34,6 +34,6 @@ public class Movie {
         this.description = movie.description;
         this.rating = movie.rating;
         this.runtimeMins = movie.runtimeMins;
-        this.updatedAt = LocalDateTime.now(); // Update the updatedAt timestamp
+        this.updatedAt = OffsetDateTime.now(); // Update the updatedAt timestamp
     }
 }

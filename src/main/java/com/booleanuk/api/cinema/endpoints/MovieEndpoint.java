@@ -1,7 +1,9 @@
 package com.booleanuk.api.cinema.endpoints;
 
 import com.booleanuk.api.cinema.models.Movie;
+import com.booleanuk.api.cinema.models.Response;
 import com.booleanuk.api.cinema.repositories.MovieRepository;
+import com.booleanuk.api.cinema.services.ResponseUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,40 +18,47 @@ public class MovieEndpoint {
     private MovieRepository repository  ;
 
     @GetMapping
-    public ResponseEntity<List<Movie>> getMovies() {
-        return ResponseEntity.ok(repository.findAll());
+    public ResponseEntity<Response<List<Movie>>> getMovies() {
+        List<Movie> movies = repository.findAll();
 
+        return ResponseUtil.buildResponseEntity(movies);
     }
 
     @PostMapping
-    public ResponseEntity<Movie> createMovie(@Valid @RequestBody Movie movie) {
-        return ResponseEntity.ok(repository.save(movie));
+    public ResponseEntity<Response<Movie>> createMovie(@Valid @RequestBody Movie inputMovie) {
+        Movie movie = repository.save(inputMovie);
+
+        return ResponseUtil.buildResponseEntity(movie);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable long id) {
-        return repository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Response<Movie>> getMovieById(@PathVariable long id) {
+        Movie movie = repository.findById(id).orElse(null);
+
+        return ResponseUtil.buildResponseEntity(movie);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Movie> updateMovie(@PathVariable long id, @Valid @RequestBody Movie movieDetails) {
-        return repository.findById(id)
-                .map(movie -> {
-                    movie.update(movieDetails); // Use the update method
-                    return ResponseEntity.ok(repository.save(movie));
+    public ResponseEntity<Response<Movie>> updateMovie(@PathVariable long id, @Valid @RequestBody Movie movieDetails) {
+        Movie movie = repository.findById(id)
+                .map(m -> {
+                    m.update(movieDetails);
+                    return m;
                 })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElse(null);
+
+        return ResponseUtil.buildResponseEntity(movie);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteMovie(@PathVariable long id) {
-        return repository.findById(id)
-                .map(movie -> {
-                    repository.delete(movie);
-                    return ResponseEntity.ok().build();
+    public ResponseEntity<Response<Movie>> deleteMovie(@PathVariable long id) {
+        Movie movie = repository.findById(id)
+                .map(m -> {
+                    repository.delete(m);
+                    return m;
                 })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElse(null);
+
+        return ResponseUtil.buildResponseEntity(movie);
     }
 }

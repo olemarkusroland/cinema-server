@@ -1,7 +1,9 @@
 package com.booleanuk.api.cinema.endpoints;
 
+import com.booleanuk.api.cinema.models.Response;
 import com.booleanuk.api.cinema.models.Screening;
 import com.booleanuk.api.cinema.repositories.ScreeningRepository;
+import com.booleanuk.api.cinema.services.ResponseUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,21 +18,26 @@ public class ScreeningEndpoint {
     private ScreeningRepository repository;
 
     @GetMapping("/movie/{movieId}/screening")
-    public ResponseEntity<List<Screening>> getScreenings(@PathVariable int movieId) {
-        return ResponseEntity.ok(repository.findByMovieId(movieId));
+    public ResponseEntity<   Response< List<Screening> >   > getScreenings(@PathVariable int movieId) {
+        List<Screening> screenings = repository.findByMovieId(movieId);
+
+        return ResponseUtil.buildResponseEntity(screenings);
     }
 
     @PostMapping("/movie/{movieId}/screening")
-    public ResponseEntity<Screening> createScreening(@PathVariable long movieId, @Valid @RequestBody Screening screening) {
-        screening.movieId = (int) movieId;
-        return ResponseEntity.ok(repository.save(screening));
+    public ResponseEntity<Response<Screening>> createScreening(@PathVariable long movieId, @Valid @RequestBody Screening inputScreening) {
+        inputScreening.movieId = (int) movieId;
+
+        Screening screening = repository.save(inputScreening);
+
+        return ResponseUtil.buildResponseEntity(screening);
     }
 
     @GetMapping("screening/{screeningId}")
-    public ResponseEntity<Screening> getScreening(@PathVariable long screeningId) {
-        return repository.findById(screeningId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Response<Screening>> getScreening(@PathVariable long screeningId) {
+        Screening screening = repository.findById(screeningId).orElse(null);
+
+        return ResponseUtil.buildResponseEntity(screening);
     }
 
     @PutMapping("screening/{screeningId}")
