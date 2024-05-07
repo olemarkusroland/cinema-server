@@ -21,18 +21,17 @@ public class MovieEndpoint {
 
     }
 
+    @PostMapping
+    public ResponseEntity<Movie> createMovie(@Valid @RequestBody Movie movie) {
+        return ResponseEntity.ok(repository.save(movie));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovieById(@PathVariable long id) {
         return repository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-    @PostMapping
-    public ResponseEntity<Movie> createMovie(@Valid @RequestBody Movie movie) {
-        return ResponseEntity.ok(repository.save(movie));
-    }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Movie> updateMovie(@PathVariable long id, @Valid @RequestBody Movie movieDetails) {
