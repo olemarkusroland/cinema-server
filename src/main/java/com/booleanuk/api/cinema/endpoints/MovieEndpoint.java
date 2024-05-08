@@ -1,5 +1,6 @@
 package com.booleanuk.api.cinema.endpoints;
 
+import com.booleanuk.api.cinema.exceptions.ResourceNotFoundException;
 import com.booleanuk.api.cinema.models.Movie;
 import com.booleanuk.api.cinema.models.Response;
 import com.booleanuk.api.cinema.repositories.MovieRepository;
@@ -18,47 +19,48 @@ public class MovieEndpoint {
     private MovieRepository repository  ;
 
     @GetMapping
-    public ResponseEntity<Response<List<Movie>>> getMovies() {
+    public ResponseEntity<Response<?>> getMovies() {
         List<Movie> movies = repository.findAll();
 
-        return ResponseUtil.buildResponseEntity(movies);
+        return ResponseUtil.buildResponse(movies);
     }
 
     @PostMapping
-    public ResponseEntity<Response<Movie>> createMovie(@Valid @RequestBody Movie inputMovie) {
+    public ResponseEntity<Response<?>> createMovie(@Valid @RequestBody Movie inputMovie) {
         Movie movie = repository.save(inputMovie);
 
-        return ResponseUtil.buildResponseEntity(movie);
+        return ResponseUtil.buildResponse(movie);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response<Movie>> getMovieById(@PathVariable long id) {
-        Movie movie = repository.findById(id).orElse(null);
+    public ResponseEntity<Response<?>> getMovieById(@PathVariable long id) {
+        Movie movie = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Movie with ID " + id + " not found"));
 
-        return ResponseUtil.buildResponseEntity(movie);
+        return ResponseUtil.buildResponse(movie);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response<Movie>> updateMovie(@PathVariable long id, @Valid @RequestBody Movie movieDetails) {
+    public ResponseEntity<Response<?>> updateMovie(@PathVariable long id, @Valid @RequestBody Movie movieDetails) {
         Movie movie = repository.findById(id)
                 .map(m -> {
                     m.update(movieDetails);
                     return m;
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Movie with ID " + id + " not found"));
 
-        return ResponseUtil.buildResponseEntity(movie);
+        return ResponseUtil.buildResponse(movie);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Response<Movie>> deleteMovie(@PathVariable long id) {
+    public ResponseEntity<Response<?>> deleteMovie(@PathVariable long id) {
         Movie movie = repository.findById(id)
                 .map(m -> {
                     repository.delete(m);
                     return m;
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Movie with ID " + id + " not found"));
 
-        return ResponseUtil.buildResponseEntity(movie);
+        return ResponseUtil.buildResponse(movie);
     }
 }

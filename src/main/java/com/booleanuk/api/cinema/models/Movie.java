@@ -1,6 +1,7 @@
 package com.booleanuk.api.cinema.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.OffsetDateTime;
 
@@ -8,11 +9,20 @@ import java.time.OffsetDateTime;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
+    public Integer id;
+
+    @NotNull(message = "'title' cannot be null")
     public String title;
+
+    @NotNull(message = "'rating' cannot be null")
     public String rating;
+
+    @NotNull(message = "'description' cannot be null")
     public String description;
+
+    @NotNull(message = "'runtimeMins' cannot be null")
     public int runtimeMins;
+    
     protected OffsetDateTime createdAt;
     protected OffsetDateTime updatedAt;
 

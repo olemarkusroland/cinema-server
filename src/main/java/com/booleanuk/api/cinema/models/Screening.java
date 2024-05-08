@@ -2,6 +2,7 @@ package com.booleanuk.api.cinema.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.OffsetDateTime;
 
@@ -9,15 +10,19 @@ import java.time.OffsetDateTime;
 public class Screening {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
-    public int movieId;
-    public int screenNumber;
+    public Integer id;
+    public Integer movieId;
+
+    @NotNull(message = "'screenNumber' cannot be null")
+    public Integer screenNumber;
+
+    @NotNull(message = "'capacity' cannot be null")
+    public Integer capacity;
 
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ssXXX")
     private OffsetDateTime startsAt;
 
-    public int capacity;
     protected OffsetDateTime createdAt;
     protected OffsetDateTime updatedAt;
 

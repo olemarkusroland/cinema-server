@@ -1,5 +1,6 @@
 package com.booleanuk.api.cinema.endpoints;
 
+import com.booleanuk.api.cinema.exceptions.ResourceNotFoundException;
 import com.booleanuk.api.cinema.models.Response;
 import com.booleanuk.api.cinema.models.Screening;
 import com.booleanuk.api.cinema.repositories.ScreeningRepository;
@@ -18,45 +19,46 @@ public class ScreeningEndpoint {
     private ScreeningRepository repository;
 
     @GetMapping("/movie/{movieId}/screening")
-    public ResponseEntity<   Response< List<Screening> >   > getScreenings(@PathVariable int movieId) {
+    public ResponseEntity<Response<?>> getScreenings(@PathVariable int movieId) {
         List<Screening> screenings = repository.findByMovieId(movieId);
 
-        return ResponseUtil.buildResponseEntity(screenings);
+        return ResponseUtil.buildResponse(screenings);
+    }
+
+    @GetMapping("screening/{screeningId}")
+    public ResponseEntity<Response<?>> getScreening(@PathVariable long screeningId) {
+        Screening screening = repository.findById(screeningId)
+                .orElseThrow(() -> new ResourceNotFoundException("Screening with id " + screeningId + " not found"));
+
+        return ResponseUtil.buildResponse(screening);
     }
 
     @PostMapping("/movie/{movieId}/screening")
-    public ResponseEntity<Response<Screening>> createScreening(@PathVariable long movieId, @Valid @RequestBody Screening inputScreening) {
+    public ResponseEntity<Response<?>> createScreening(@PathVariable long movieId, @Valid @RequestBody Screening inputScreening) {
         inputScreening.movieId = (int) movieId;
 
         Screening screening = repository.save(inputScreening);
 
-        return ResponseUtil.buildResponseEntity(screening);
-    }
-
-    @GetMapping("screening/{screeningId}")
-    public ResponseEntity<Response<Screening>> getScreening(@PathVariable long screeningId) {
-        Screening screening = repository.findById(screeningId).orElse(null);
-
-        return ResponseUtil.buildResponseEntity(screening);
+        return ResponseUtil.buildResponse(screening);
     }
 
     @PutMapping("screening/{screeningId}")
-    public ResponseEntity<Screening> updateScreening(@Valid @RequestBody Screening screeningInput, @PathVariable long screeningId) {
+    public ResponseEntity<Response<?>> updateScreening(@Valid @RequestBody Screening screeningInput, @PathVariable long screeningId) {
         return repository.findById(screeningId)
                 .map(screening -> {
                     screening.update(screeningInput);
-                    return ResponseEntity.ok(repository.save(screening));
+                    return ResponseUtil.buildSuccessResponse(screening);
                 })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Screening with id " + screeningId + " not found"));
     }
 
     @DeleteMapping("screening/{screeningId}")
-    public ResponseEntity<Screening> deleteScreening(@PathVariable long screeningId) {
+    public ResponseEntity<Response<?>> deleteScreening(@PathVariable long screeningId) {
         return repository.findById(screeningId)
                 .map(screening -> {
                     repository.delete(screening);
-                    return ResponseEntity.ok(screening);
+                    return ResponseUtil.buildSuccessResponse(screening);
                 })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Screening with id " + screeningId + " not found"));
     }
 }

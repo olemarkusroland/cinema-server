@@ -1,5 +1,6 @@
 package com.booleanuk.api.cinema.endpoints;
 
+import com.booleanuk.api.cinema.exceptions.ResourceNotFoundException;
 import com.booleanuk.api.cinema.models.Customer;
 import com.booleanuk.api.cinema.models.Response;
 import com.booleanuk.api.cinema.repositories.CustomerRepository;
@@ -17,46 +18,47 @@ public class CustomerEndpoint {
     private CustomerRepository repository;
 
     @GetMapping
-    public ResponseEntity<Response<List<Customer>>> getCustomers() {
+    public ResponseEntity<Response<?>> getCustomers() {
         List<Customer> customers = repository.findAll();
-        return ResponseUtil.buildResponseEntity(customers);
+        return ResponseUtil.buildResponse(customers);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response<Customer>> getCustomer(@PathVariable long id) {
-        Customer customer = repository.findById(id).orElse(null);
+    public ResponseEntity<Response<?>> getCustomer(@PathVariable long id) {
+        Customer customer = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer with "+id+" not found"));
 
-        return ResponseUtil.buildResponseEntity(customer);
+        return ResponseUtil.buildResponse(customer);
     }
 
     @PostMapping
-    public ResponseEntity<Response<Customer>> createCustomer(@RequestBody Customer inputCustomer) {
+    public ResponseEntity<Response<?>> createCustomer(@RequestBody Customer inputCustomer) {
         Customer customer = repository.save(inputCustomer);
 
-        return ResponseUtil.buildResponseEntity(customer);
+        return ResponseUtil.buildResponse(customer);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response<Customer>> updateCustomer(@PathVariable long id, @RequestBody Customer customerInput) {
+    public ResponseEntity<Response<?>> updateCustomer(@PathVariable long id, @RequestBody Customer customerInput) {
         Customer customer = repository.findById(id)
                 .map(c -> {
                     c.update(customerInput);
                     return repository.save(c);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Customer with "+id+" not found"));
 
-        return ResponseUtil.buildResponseEntity(customer);
+        return ResponseUtil.buildResponse(customer);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Response<Customer>> deleteCustomer(@PathVariable long id) {
+    public ResponseEntity<Response<?>> deleteCustomer(@PathVariable long id) {
         Customer customer = repository.findById(id)
                 .map(c -> {
                     repository.delete(c);
                     return c;
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Customer with "+id+" not found"));
 
-        return ResponseUtil.buildResponseEntity(customer);
+        return ResponseUtil.buildResponse(customer);
     }
 }
