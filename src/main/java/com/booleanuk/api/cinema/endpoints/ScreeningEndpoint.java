@@ -18,6 +18,13 @@ public class ScreeningEndpoint {
     @Autowired
     private ScreeningRepository repository;
 
+    @GetMapping("screening")
+    public ResponseEntity<Response<?>> getAllScreenings() {
+        List<Screening> screenings = repository.findAll();
+
+        return ResponseUtil.buildResponse(screenings);
+    }
+
     @GetMapping("/movie/{movieId}/screening")
     public ResponseEntity<Response<?>> getScreenings(@PathVariable int movieId) {
         List<Screening> screenings = repository.findByMovieId(movieId);
