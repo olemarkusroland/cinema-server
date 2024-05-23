@@ -1,8 +1,8 @@
-package com.booleanuk.api.cinema.services;
+package cinema.services;
 
+import cinema.models.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.booleanuk.api.cinema.models.Response;
 
 import java.util.HashMap;
 import java.util.Map;

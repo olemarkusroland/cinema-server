@@ -1,6 +1,6 @@
-package com.booleanuk.api.cinema.repositories;
+package cinema.repositories;
 
-import com.booleanuk.api.cinema.models.Customer;
+import cinema.models.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

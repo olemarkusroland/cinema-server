@@ -1,25 +1,29 @@
-package com.booleanuk.api.cinema.models;
+package cinema.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
 import java.time.OffsetDateTime;
 
 @Entity
-public class Ticket {
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
-    @NotNull(message = "'seat' cannot be null")
-    public Integer seat;
+    @NotNull(message = "'name' cannot be null")
+    public String name;
 
-    public Integer customerId;
-    public Integer screeningId;
+    @NotNull(message = "'email' cannot be null")
+    public String email;
+
+    @NotNull(message = "'phone' cannot be null")
+    public String phone;
 
     protected OffsetDateTime createdAt;
     protected OffsetDateTime updatedAt;
 
-    protected Ticket() {}
+    protected Customer() {}
 
     @PrePersist
     protected void onCreate() {
@@ -32,9 +36,10 @@ public class Ticket {
         this.updatedAt = OffsetDateTime.now();
     }
 
-    public void update(Ticket ticket) {
-        this.seat = ticket.seat;
-        this.customerId = ticket.customerId;
-        this.screeningId = ticket.screeningId;
+    public void update(Customer customer) {
+        this.name = customer.name;
+        this.email = customer.email;
+        this.phone = customer.phone;
+        this.updatedAt = OffsetDateTime.now();
     }
 }

@@ -1,4 +1,4 @@
-package com.booleanuk.api.cinema.models;
+package cinema.models;
 
 import lombok.Getter;
 

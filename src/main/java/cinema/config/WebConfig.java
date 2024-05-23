@@ -1,4 +1,4 @@
-package com.booleanuk.api.cinema.config;
+package cinema.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

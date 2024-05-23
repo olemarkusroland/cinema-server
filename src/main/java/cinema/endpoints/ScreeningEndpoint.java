@@ -1,10 +1,10 @@
-package com.booleanuk.api.cinema.endpoints;
+package cinema.endpoints;
 
-import com.booleanuk.api.cinema.exceptions.ResourceNotFoundException;
-import com.booleanuk.api.cinema.models.Response;
-import com.booleanuk.api.cinema.models.Screening;
-import com.booleanuk.api.cinema.repositories.ScreeningRepository;
-import com.booleanuk.api.cinema.services.ResponseUtil;
+import cinema.exceptions.ResourceNotFoundException;
+import cinema.models.Response;
+import cinema.models.Screening;
+import cinema.repositories.ScreeningRepository;
+import cinema.services.ResponseUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

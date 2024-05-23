@@ -1,6 +1,6 @@
-package com.booleanuk.api.cinema;
+package cinema;
 
-import com.booleanuk.api.cinema.exceptions.ResourceNotFoundException;
+import cinema.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

@@ -1,4 +1,4 @@
-package com.booleanuk.api.cinema;
+package cinema;
 
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ public class SwaggerConfig {
     public GroupedOpenApi api() {
         return GroupedOpenApi.builder()
                 .group("cinema-api")
-                .packagesToScan("com.booleanuk.api.cinema.endpoints")
+                .packagesToScan("cinema.endpoints")
                 .build();
     }
 }
