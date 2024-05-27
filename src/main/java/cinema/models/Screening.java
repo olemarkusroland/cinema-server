@@ -11,7 +11,7 @@ public class Screening {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
-    public Integer movieId;
+    public String movieId;
 
     @NotNull(message = "'screenNumber' cannot be null")
     public Integer screenNumber;
