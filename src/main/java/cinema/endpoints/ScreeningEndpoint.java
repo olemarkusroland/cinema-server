@@ -41,8 +41,8 @@ public class ScreeningEndpoint {
     }
 
     @PostMapping("/movie/{movieId}/screening")
-    public ResponseEntity<Response<?>> createScreening(@PathVariable long movieId, @Valid @RequestBody Screening inputScreening) {
-        inputScreening.movieId = (int) movieId;
+    public ResponseEntity<Response<?>> createScreening(@PathVariable String movieId, @Valid @RequestBody Screening inputScreening) {
+        inputScreening.movieId = movieId;
 
         Screening screening = repository.save(inputScreening);
 
