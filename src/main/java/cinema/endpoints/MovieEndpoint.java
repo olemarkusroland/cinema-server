@@ -33,7 +33,7 @@ public class MovieEndpoint {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response<?>> getMovieById(@PathVariable long id) {
+    public ResponseEntity<Response<?>> getMovieById(@PathVariable String id) {
         Movie movie = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movie with ID " + id + " not found"));
 
@@ -41,7 +41,7 @@ public class MovieEndpoint {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response<?>> updateMovie(@PathVariable long id, @Valid @RequestBody Movie movieDetails) {
+    public ResponseEntity<Response<?>> updateMovie(@PathVariable String id, @Valid @RequestBody Movie movieDetails) {
         Movie movie = repository.findById(id)
                 .map(m -> {
                     m.update(movieDetails);
@@ -53,7 +53,7 @@ public class MovieEndpoint {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Response<?>> deleteMovie(@PathVariable long id) {
+    public ResponseEntity<Response<?>> deleteMovie(@PathVariable String id) {
         Movie movie = repository.findById(id)
                 .map(m -> {
                     repository.delete(m);
